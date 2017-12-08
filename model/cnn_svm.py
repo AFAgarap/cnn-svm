@@ -20,90 +20,97 @@ from __future__ import print_function
 __version__ = '0.1.0'
 __author__ = 'Abien Fred Agarap'
 
-import argparse
 import tensorflow as tf
-from tensorflow.examples.tutorials.mnist import input_data
 import sys
 
 
-class CNN:
+class CNNSVM:
 
-    def __init__(self, alpha, batch_size, num_classes, penalty_parameter, sequence_length):
+    def __init__(self, alpha, batch_size, num_classes, num_features, penalty_parameter):
         """Initializes the CNN-SVM model
 
         :param alpha: The learning rate to be used by the model.
         :param batch_size: The number of batches to use for training/validation/testing.
         :param num_classes: The number of classes in the dataset.
+        :param num_features: The number of features in the dataset.
         :param penalty_parameter: The SVM C penalty parameter.
-        :param sequence_length: The number of features in the dataset.
         """
         self.alpha = alpha
         self.batch_size = batch_size
         self.num_classes = num_classes
+        self.num_features = num_features
         self.penalty_parameter = penalty_parameter
-        self.sequence_length = sequence_length
 
         def __graph__():
-            # [BATCH_SIZE, 784]
-            x = tf.placeholder(dtype=tf.float32, shape=[None, sequence_length], name='x_input')
 
-            # [BATCH_SIZE, 10]
-            y = tf.placeholder(dtype=tf.float32, shape=[None, num_classes], name='actual_label')
+            with tf.name_scope('input'):
+                # [BATCH_SIZE, NUM_FEATURES]
+                x_input = tf.placeholder(dtype=tf.float32, shape=[None, num_features], name='x_input')
+
+                # [BATCH_SIZE, NUM_CLASSES]
+                y_input = tf.placeholder(dtype=tf.float32, shape=[None, num_classes], name='actual_label')
 
             # First convolutional layer
-            W_conv1 = self.weight_variable([5, 5, 1, 32])
-            b_conv1 = self.bias_variable([32])
+            first_conv_weight = self.weight_variable([5, 5, 1, 32])
+            first_conv_bias = self.bias_variable([32])
 
-            x_image = tf.reshape(x, [-1, 28, 28, 1])
+            input_image = tf.reshape(x_input, [-1, 28, 28, 1])
 
-            h_conv1 = tf.nn.relu(self.conv2d(x_image, W_conv1) + b_conv1)
-            h_pool1 = self.max_pool_2x2(h_conv1)
+            first_conv_activation = tf.nn.relu(self.conv2d(input_image, first_conv_weight) + first_conv_bias)
+            first_conv_pool = self.max_pool_2x2(first_conv_activation)
 
             # Second convolutional layer
-            W_conv2 = self.weight_variable([5, 5, 32, 64])
-            b_conv2 = self.bias_variable([64])
+            second_conv_weight = self.weight_variable([5, 5, 32, 64])
+            second_conv_bias = self.bias_variable([64])
 
-            h_conv2 = tf.nn.relu(self.conv2d(h_pool1, W_conv2) + b_conv2)
-            h_pool2 = self.max_pool_2x2(h_conv2)
+            second_conv_activation = tf.nn.relu(self.conv2d(first_conv_pool, second_conv_weight) + second_conv_bias)
+            second_conv_pool = self.max_pool_2x2(second_conv_activation)
 
             # Fully-connected layer (Dense Layer)
-            W_fc1 = self.weight_variable([7 * 7 * 64, 1024])
-            b_fc1 = self.bias_variable([1024])
+            dense_layer_weight = self.weight_variable([7 * 7 * 64, 1024])
+            dense_layer_bias = self.bias_variable([1024])
 
-            h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64])
-            h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
+            second_conv_pool_flatten = tf.reshape(second_conv_pool, [-1, 7 * 7 * 64])
+            dense_layer_activation = tf.nn.relu(tf.matmul(second_conv_pool_flatten, dense_layer_weight) +
+                                                dense_layer_bias)
 
-            # Dropout
-            # For avoiding overfitting
+            # Dropout, to avoid over-fitting
             keep_prob = tf.placeholder(tf.float32)
-            h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
+            h_fc1_drop = tf.nn.dropout(dense_layer_activation, keep_prob)
 
             # Readout layer
-            W_fc2 = self.weight_variable([1024, num_classes])
-            b_fc2 = self.bias_variable([num_classes])
-            
-            y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
+            readout_weight = self.weight_variable([1024, num_classes])
+            readout_bias = self.bias_variable([num_classes])
+
+            output = tf.matmul(h_fc1_drop, readout_weight) + readout_bias
 
             with tf.name_scope('svm'):
-                regularization_loss = tf.reduce_mean(tf.square(W_fc2))
+                regularization_loss = tf.reduce_mean(tf.square(readout_weight))
                 hinge_loss = tf.reduce_mean(
-                    tf.square(tf.maximum(tf.zeros([batch_size, num_classes]), 1 - y * y_conv)))
+                    tf.square(tf.maximum(tf.zeros([batch_size, num_classes]), 1 - y_input * output)))
                 with tf.name_scope('loss'):
                     loss = regularization_loss + penalty_parameter * hinge_loss
             tf.summary.scalar('loss', loss)
 
-            y_conv = tf.identity(tf.sign(y_conv), name='prediction')
-            train_op = tf.train.AdamOptimizer(learning_rate=alpha).minimize(loss)
-            correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y, 1))
-            accuracy_op = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+            optimizer = tf.train.AdamOptimizer(learning_rate=alpha).minimize(loss)
 
-            self.x = x
-            self.y = y
+            with tf.name_scope('accuracy'):
+                output = tf.identity(tf.sign(output), name='prediction')
+                correct_prediction = tf.equal(tf.argmax(output, 1), tf.argmax(y_input, 1))
+                with tf.name_scope('accuracy'):
+                    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+            tf.summary.scalar('accuracy', accuracy)
+
+            merged = tf.summary.merge_all()
+
+            self.x_input = x_input
+            self.y_input = y_input
             self.keep_prob = keep_prob
-            self.y_conv = y_conv
+            self.output = output
             self.loss = loss
-            self.train_op = train_op
-            self.accuracy_op = accuracy_op
+            self.optimizer = optimizer
+            self.accuracy = accuracy
+            self.merged = merged
 
         sys.stdout.write('\n<log> Building graph...')
         __graph__()
@@ -189,22 +196,3 @@ class CNN:
         :return: Downsampled input.
         """
         return tf.nn.max_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description='2 Convolutional Layer with Max Pooling for MNIST Classification')
-    group = parser.add_argument_group('Arguments')
-    group.add_argument('-d', '--dataset', required=True, type=str,
-                             help='path of the MNIST dataset')
-    arguments = parser.parse_args()
-    return arguments
-
-
-if __name__ == '__main__':
-    args = parse_args()
-
-    mnist = input_data.read_data_sets(args.dataset, one_hot=True)
-    num_classes = mnist.train.labels.shape[1]
-    sequence_length = mnist.train.images.shape[1]
-    model = CNN(alpha=1e-4, batch_size=50, num_classes=num_classes, penalty_parameter=0.5, sequence_length=sequence_length)
-    model.train(epochs=2000, train_data=mnist.train, test_data=mnist.test)

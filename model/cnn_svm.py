@@ -131,30 +131,32 @@ class CNNSVM:
 
             for index in range(epochs):
                 # train by batch
-                batch_x, batch_y = train_data.next_batch(self.batch_size)
-                batch_y[batch_y == 0] = -1
+                batch_features, batch_labels = train_data.next_batch(self.batch_size)
+                batch_labels[batch_labels == 0] = -1
 
                 # input dictionary with dropout of 50%
-                feed_dict = {self.x: batch_x, self.y: batch_y, self.keep_prob: 0.5}
+                feed_dict = {self.x_input: batch_features, self.y_input: batch_labels, self.keep_prob: 0.5}
                 
                 # run the train op
-                _, loss = sess.run([self.train_op, self.loss], feed_dict=feed_dict)
+                _, loss = sess.run([self.optimizer, self.loss], feed_dict=feed_dict)
                 
                 # every 100th step and at 0,
                 if index % 100 == 0:
-                    feed_dict = {self.x: batch_x, self.y: batch_y, self.keep_prob: 1.0}
+                    feed_dict = {self.x_input: batch_features, self.y_input: batch_labels, self.keep_prob: 1.0}
                     
                     # get the accuracy of training
-                    train_accuracy = sess.run(self.accuracy_op, feed_dict=feed_dict)
+                    train_accuracy = sess.run(self.accuracy, feed_dict=feed_dict)
                     
                     # display the training accuracy
                     print('step: {}, training accuracy : {}, training loss : {}'.format(index, train_accuracy, loss))
 
-            y_test = test_data.labels
-            y_test[y_test == 0] = -1
-            feed_dict = {self.x: test_data.images, self.y: y_test, self.keep_prob: 1.0}
+            test_features = test_data.images
+            test_labels = test_data.labels
+            test_labels[test_labels == 0] = -1
 
-            test_accuracy = sess.run(self.accuracy_op, feed_dict=feed_dict)
+            feed_dict = {self.x_input: test_features, self.y_input: test_labels, self.keep_prob: 1.0}
+
+            test_accuracy = sess.run(self.accuracy, feed_dict=feed_dict)
 
             print('Test Accuracy: {}'.format(test_accuracy))
 
@@ -179,20 +181,20 @@ class CNNSVM:
         return tf.Variable(initial)
 
     @staticmethod
-    def conv2d(x, W):
+    def conv2d(features, weight):
         """Produces a convolutional layer that filters an image subregion
 
-        :param x: The layer input.
-        :param W: The size of the layer filter.
+        :param features: The layer input.
+        :param weight: The size of the layer filter.
         :return: Returns a convolutional layer.
         """
-        return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
+        return tf.nn.conv2d(features, weight, strides=[1, 1, 1, 1], padding='SAME')
 
     @staticmethod
-    def max_pool_2x2(x):
+    def max_pool_2x2(features):
         """Downnsamples the image based on convolutional layer
 
-        :param x: The input to downsample.
+        :param features: The input to downsample.
         :return: Downsampled input.
         """
-        return tf.nn.max_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+        return tf.nn.max_pool(features, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')

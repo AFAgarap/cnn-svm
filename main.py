@@ -52,11 +52,11 @@ if __name__ == '__main__':
     model_choice = args.model
 
     if model_choice == '1':
-        model = CNN(alpha=1e-4, batch_size=128, num_classes=num_classes, num_features=sequence_length)
-        model.train(checkpoint_path=args.checkpoint_path, epochs=2000, log_path=args.log_path,
+        model = CNN(alpha=1e-3, batch_size=128, num_classes=num_classes, num_features=sequence_length)
+        model.train(checkpoint_path=args.checkpoint_path, epochs=10000, log_path=args.log_path,
                     train_data=mnist.train, test_data=mnist.test)
     elif model_choice == '2':
-        model = CNNSVM(alpha=1e-4, batch_size=128, num_classes=num_classes, num_features=sequence_length,
+        model = CNNSVM(alpha=1e-3, batch_size=128, num_classes=num_classes, num_features=sequence_length,
                        penalty_parameter=args.penalty_parameter)
-        model.train(checkpoint_path=args.checkpoint_path, epochs=2000, log_path=args.log_path,
+        model.train(checkpoint_path=args.checkpoint_path, epochs=10000, log_path=args.log_path,
                     train_data=mnist.train, test_data=mnist.test)

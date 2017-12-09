@@ -20,7 +20,9 @@ from __future__ import print_function
 __version__ = '0.1.0'
 __author__ = 'Abien Fred Agarap'
 
+import os
 import tensorflow as tf
+import time
 import sys
 
 
@@ -116,18 +118,39 @@ class CNNSVM:
         __graph__()
         sys.stdout.write('</log>\n')
 
-    def train(self, epochs, train_data, test_data):
+    def train(self, checkpoint_path, epochs, log_path, train_data, test_data):
         """Trains the initialized model.
 
+        :param checkpoint_path: The path where to save the trained model.
         :param epochs: The number of passes through the entire dataset.
+        :param log_path: The path where to save the TensorBoard logs.
         :param train_data: The training dataset.
         :param test_data: The testing dataset.
         :return: None
         """
+
+        if not os.path.exists(path=log_path):
+            os.mkdir(log_path)
+
+        if not os.path.exists(path=checkpoint_path):
+            os.mkdir(checkpoint_path)
+
+        saver = tf.train.Saver(max_to_keep=4)
+
         init = tf.global_variables_initializer()
+
+        timestamp = str(time.asctime())
+
+        train_writer = tf.summary.FileWriter(logdir=log_path + timestamp + '-training', graph=tf.get_default_graph())
 
         with tf.Session() as sess:
             sess.run(init)
+
+            checkpoint = tf.train.get_checkpoint_state(checkpoint_path)
+
+            if checkpoint and checkpoint.model_checkpoint_path:
+                saver = tf.train.import_meta_graph(checkpoint.model_checkpoint_path + '.meta')
+                saver.restore(sess, tf.train.latest_checkpoint(checkpoint_path))
 
             for index in range(epochs):
                 # train by batch
@@ -138,7 +161,7 @@ class CNNSVM:
                 feed_dict = {self.x_input: batch_features, self.y_input: batch_labels, self.keep_prob: 0.5}
                 
                 # run the train op
-                _, loss = sess.run([self.optimizer, self.loss], feed_dict=feed_dict)
+                summary, _, loss = sess.run([self.merged, self.optimizer, self.loss], feed_dict=feed_dict)
                 
                 # every 100th step and at 0,
                 if index % 100 == 0:
@@ -149,6 +172,10 @@ class CNNSVM:
                     
                     # display the training accuracy
                     print('step: {}, training accuracy : {}, training loss : {}'.format(index, train_accuracy, loss))
+
+                    train_writer.add_summary(summary=summary, global_step=index)
+
+                    saver.save(sess, save_path=os.path.join(checkpoint_path, self.__name__), global_step=index)
 
             test_features = test_data.images
             test_labels = test_data.labels

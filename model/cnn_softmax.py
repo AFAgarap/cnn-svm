@@ -20,6 +20,7 @@ from __future__ import print_function
 __version__ = '0.1.0'
 __author__ = 'Abien Fred Agarap'
 
+import os
 import tensorflow as tf
 import time
 import sys
@@ -111,15 +112,25 @@ class CNN:
         __graph__()
         sys.stdout.write('</log>\n')
 
-    def train(self, epochs, log_path, train_data, test_data):
+    def train(self, checkpoint_path, epochs, log_path, train_data, test_data):
         """Trains the initialized model.
 
+        :param checkpoint_path: The path where to save the trained model.
         :param epochs: The number of passes through the entire dataset.
-        :param log_path:
+        :param log_path: The path where to save the TensorBoard logs.
         :param train_data: The training dataset.
         :param test_data: The testing dataset.
         :return: None
         """
+
+        if not os.path.exists(path=log_path):
+            os.mkdir(log_path)
+
+        if not os.path.exists(path=checkpoint_path):
+            os.mkdir(checkpoint_path)
+
+        saver = tf.train.Saver(max_to_keep=4)
+
         init = tf.global_variables_initializer()
 
         timestamp = str(time.asctime())
@@ -128,6 +139,12 @@ class CNN:
 
         with tf.Session() as sess:
             sess.run(init)
+
+            checkpoint = tf.train.get_checkpoint_state(checkpoint_path)
+
+            if checkpoint and checkpoint.model_checkpoint_path:
+                saver = tf.train.import_meta_graph(checkpoint.model_checkpoint_path + '.meta')
+                saver.restore(sess, tf.train.latest_checkpoint(checkpoint_path))
 
             for index in range(epochs):
                 # train by batch
@@ -150,6 +167,8 @@ class CNN:
                     print('step: {}, training accuracy : {}, training loss : {}'.format(index, train_accuracy, loss))
 
                     train_writer.add_summary(summary=summary, global_step=index)
+
+                    saver.save(sess, save_path=os.path.join(checkpoint_path, self.__name__), global_step=index)
 
             test_features = test_data.images
             test_labels = test_data.labels

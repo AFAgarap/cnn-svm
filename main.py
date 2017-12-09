@@ -33,6 +33,8 @@ def parse_args():
                        help='[1] CNN-Softmax, [2] CNN-SVM')
     group.add_argument('-d', '--dataset', required=True, type=str,
                        help='path of the MNIST dataset')
+    group.add_argument('-p', '--penalty_parameter', required=False, type=int,
+                       help='the SVM C penalty parameter')
     group.add_argument('-c', '--checkpoint_path', required=True, type=str,
                        help='path where to save the trained model')
     group.add_argument('-l', '--log_path', required=True, type=str,
@@ -55,3 +57,4 @@ if __name__ == '__main__':
     elif model_choice == '2':
         model = CNNSVM(alpha=1e-4, batch_size=128, num_classes=num_classes, num_features=sequence_length,
                        penalty_parameter=args.penalty_parameter)
+        model.train(epochs=2000, train_data=mnist.train, test_data=mnist.test)

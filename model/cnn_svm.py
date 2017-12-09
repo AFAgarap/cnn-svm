@@ -39,6 +39,7 @@ class CNNSVM:
         """
         self.alpha = alpha
         self.batch_size = batch_size
+        self.name = 'CNN-SVM'
         self.num_classes = num_classes
         self.num_features = num_features
         self.penalty_parameter = penalty_parameter
@@ -175,7 +176,7 @@ class CNNSVM:
 
                     train_writer.add_summary(summary=summary, global_step=index)
 
-                    saver.save(sess, save_path=os.path.join(checkpoint_path, self.__name__), global_step=index)
+                    saver.save(sess, save_path=os.path.join(checkpoint_path, self.name), global_step=index)
 
             test_features = test_data.images
             test_labels = test_data.labels

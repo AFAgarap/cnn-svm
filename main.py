@@ -47,6 +47,11 @@ if __name__ == '__main__':
     mnist = input_data.read_data_sets(args.dataset, one_hot=True)
     num_classes = mnist.train.labels.shape[1]
     sequence_length = mnist.train.images.shape[1]
-    
-    model = CNN(alpha=1e-4, batch_size=128, num_classes=num_classes, sequence_length=sequence_length)
-    model.train(epochs=2000, train_data=mnist.train, test_data=mnist.test)
+    model_choice = args.model
+
+    if model_choice == '1':
+        model = CNN(alpha=1e-4, batch_size=128, num_classes=num_classes, num_features=sequence_length)
+        model.train(epochs=2000, train_data=mnist.train, test_data=mnist.test)
+    elif model_choice == '2':
+        model = CNNSVM(alpha=1e-4, batch_size=128, num_classes=num_classes, num_features=sequence_length,
+                       penalty_parameter=args.penalty_parameter)

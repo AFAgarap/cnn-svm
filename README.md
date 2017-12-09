@@ -1,6 +1,7 @@
 An Architecture Combining Convolutional Neural Network (CNN) and Support Vector Machine (SVM) for Image Classification
 ===
 
+[![DOI](https://zenodo.org/badge/113296846.svg)](https://zenodo.org/badge/latestdoi/113296846)
 ![](https://img.shields.io/badge/license-Apache--2.0-blue.svg)
 [![PyPI](https://img.shields.io/pypi/pyversions/Django.svg)]()
 
@@ -89,7 +90,16 @@ that no data preprocessing nor dimensionality reduction was done on the dataset 
 
 
 ## Citation
+To cite the repository/software, kindly use the following BibTex entry:
 ```
+@misc{abien_fred_agarap_2017_1098369,
+  author       = {Abien Fred Agarap},
+  title        = {AFAgarap/cnn-svm v0.1.0-alpha},
+  month        = dec,
+  year         = 2017,
+  doi          = {10.5281/zenodo.1098369},
+  url          = {https://doi.org/10.5281/zenodo.1098369}
+}
 ```
 
 ## License

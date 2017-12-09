@@ -1,5 +1,2 @@
 model_checkpoint_path: "/home/darth/GitHub Projects/cnn-svm/checkpoint/CNN-SVM-9900"
-all_model_checkpoint_paths: "/home/darth/GitHub Projects/cnn-svm/checkpoint/CNN-SVM-9600"
-all_model_checkpoint_paths: "/home/darth/GitHub Projects/cnn-svm/checkpoint/CNN-SVM-9700"
-all_model_checkpoint_paths: "/home/darth/GitHub Projects/cnn-svm/checkpoint/CNN-SVM-9800"
 all_model_checkpoint_paths: "/home/darth/GitHub Projects/cnn-svm/checkpoint/CNN-SVM-9900"

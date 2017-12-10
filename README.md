@@ -70,8 +70,8 @@ The hyperparameters used in this project were manually assigned, and not through
 |Hyperparameters|CNN-Softmax|CNN-SVM|
 |---------------|-----------|-------|
 |Batch size|128|128|
-|Epochs|10000|10000|
 |Learning rate|1e-3|1e-3|
+|Steps|10000|10000|
 |SVM C|N/A|1|
 
 The experiments were conducted on a laptop computer with Intel Core(TM) i5-6300HQ CPU @ 2.30GHz x 4, 16GB of DDR3 RAM,

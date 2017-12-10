@@ -77,7 +77,7 @@ The hyperparameters used in this project were manually assigned, and not through
 The experiments were conducted on a laptop computer with Intel Core(TM) i5-6300HQ CPU @ 2.30GHz x 4, 16GB of DDR3 RAM,
 and NVIDIA GeForce GTX 960M 4GB DDR5 GPU.
 
-![](figures/accuracy-loss.png)
+![](figures/accuracy-loss-mnist.png)
 
 **Figure 1. Training accuracy (left) and loss (right) of CNN-Softmax and CNN-SVM on image classification using
 [MNIST](http://yann.lecun.com/exdb/mnist/).**
@@ -88,6 +88,13 @@ On the other hand, the blue plot refers to the training accuracy and loss of CNN
 for [MNIST handwritten digits](http://yann.lecun.com/exdb/mnist/) classification. This may be attributed to the fact
 that no data preprocessing nor dimensionality reduction was done on the dataset for this project.
 
+![](figures/accuracy-loss-fashion.png)
+
+**Figure 2. Training accuracy (left) and loss (right) of CNN-Softmax and CNN-SVM on image classification using [Fashion-MNIST](http://github.com/zalandoresearch/fashion-mnist).**
+
+The red plot refers to the training accuracy and loss of CNN-Softmax, with a test accuracy of 91.86000227928162%.
+On the other hand, the light blue plot refers to the training accuracy and loss of CNN-SVM, with a test accuracy of
+90.71999788284302%. The result on CNN-Softmax corroborates the finding by [zalandoresearch](https://github.com/zalandoresearch) on [Fashion-MNIST](https://github.com/zalandoresearch/fashion-mnist#benchmark).
 
 ## Citation
 To cite the repository/software, kindly use the following BibTex entry:

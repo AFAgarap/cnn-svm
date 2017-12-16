@@ -8,18 +8,11 @@ An Architecture Combining Convolutional Neural Network (CNN) and Linear Support 
 *This project was inspired by Y. Tang's [Deep Learning using Linear Support Vector Machines](https://arxiv.org/abs/1306.0239)
 (2013).*
 
+The full paper on this project may be read at [arXiv.org](https://arxiv.org/abs/1712.03541), [ResearchGate](https://www.researchgate.net/publication/321745073_An_Architecture_Combining_Convolutional_Neural_Network_CNN_and_Support_Vector_Machine_SVM_for_Image_Classification), and [Academia.edu](https://www.academia.edu/35401788/An_Architecture_Combining_Convolutional_Neural_Network_CNN_and_Support_Vector_Machine_SVM_for_Image_Classification).
+
 ## Abstract 
 
-Convolutional Neural Networks (CNNs) are similar to "ordinary" neural networks in the sense that they are made up of
-hidden layers consisting neurons with "learnable" parameters. These neurons receive inputs, performs a dot product, and
-then follows it with a non-linearity. The whole network expresses the mapping between raw image pixels and class scores.
-Conventionally, the Softmax function is the classifier used at the last layer of this network.
-
-There have been studies ([Alalshekmubarak & Smith, 2013](http://ieeexplore.ieee.org/abstract/document/6544391/); 
-[Agarap, 2017](http://arxiv.org/abs/1709.03082); [Tang, 2013](https://arxiv.org/abs/1306.0239)) on the usage of a
-different classifier than Softmax for neural networks. The aforementioned studies introduce the usage of support vector
-machine (SVM) in an artificial neural network architecture. This project is yet another take on the subject, and is
-inspired by [[Tang, 2017](https://arxiv.org/abs/1306.0239)].
+Convolutional neural networks (CNNs) are similar to "ordinary" neural networks in the sense that they are made up of hidden layers consisting of neurons with "learnable" parameters. These neurons receive inputs, performs a dot product, and then follows it with a non-linearity. The whole network expresses the mapping between raw image pixels and their class scores. Conventionally, the Softmax function is the classifier used at the last layer of this network. However, there have been studies (Alalshekmubarak and Smith, 2013; Agarap, 2017; Tang, 2013) conducted to challenge this norm. The cited studies introduce the usage of linear support vector machine (SVM) in an artificial neural network architecture. This project is yet another take on the subject, and is inspired by (Tang, 2013). Empirical data has shown that the CNN-SVM model was able to achieve a test accuracy of ~99.04% using the MNIST dataset (LeCun, Cortes, and Burges, 2010). On the other hand, the CNN-Softmax was able to achieve a test accuracy of ~99.23% using the same dataset. Both models were also tested on the recently-published Fashion-MNIST dataset (Xiao, Rasul, and Vollgraf, 2017), which is suppose to be a more difficult image classification dataset than MNIST (Zalandoresearch, 2017). This proved to be the case as CNN-SVM reached a test accuracy of ~90.72%, while the CNN-Softmax reached a test accuracy of ~91.86%. The said results may be improved if data preprocessing techniques were employed on the datasets, and if the base CNN model was a relatively more sophisticated than the one used in this study. 
 
 ## Usage
 
@@ -97,6 +90,16 @@ On the other hand, the light blue plot refers to the training accuracy and loss 
 90.71999788284302%. The result on CNN-Softmax corroborates the finding by [zalandoresearch](https://github.com/zalandoresearch) on [Fashion-MNIST](https://github.com/zalandoresearch/fashion-mnist#benchmark).
 
 ## Citation
+To cite the paper, kindly use the following BibTex entry:
+```
+@article{agarap2017architecture,
+  title={An Architecture Combining Convolutional Neural Network (CNN) and Support Vector Machine (SVM) for Image Classification},
+  author={Agarap, Abien Fred},
+  journal={arXiv preprint arXiv:1712.03541},
+  year={2017}
+}
+```
+
 To cite the repository/software, kindly use the following BibTex entry:
 ```
 @misc{abien_fred_agarap_2017_1098369,

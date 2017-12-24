@@ -1,6 +1,7 @@
 An Architecture Combining Convolutional Neural Network (CNN) and Linear Support Vector Machine (SVM) for Image Classification
 ===
 
+![](https://img.shields.io/badge/DOI-cs.CV%2F1712.03541-blue.svg)
 [![DOI](https://zenodo.org/badge/113296846.svg)](https://zenodo.org/badge/latestdoi/113296846)
 ![](https://img.shields.io/badge/license-Apache--2.0-blue.svg)
 [![PyPI](https://img.shields.io/pypi/pyversions/Django.svg)]()

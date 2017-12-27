@@ -51,7 +51,7 @@ if __name__ == '__main__':
     sequence_length = mnist.train.images.shape[1]
     model_choice = args.model
 
-    assert model_choice == 1 or model_choice == 2, "Invalid choice: Choose between 1 and 2 only."
+    assert model_choice == '1' or model_choice == '2', "Invalid choice: Choose between 1 and 2 only."
 
     if model_choice == '1':
         model = CNN(alpha=1e-3, batch_size=128, num_classes=num_classes, num_features=sequence_length)

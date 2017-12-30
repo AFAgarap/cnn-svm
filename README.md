@@ -24,7 +24,7 @@ git clone https://github.com/AFAgarap/cnn-svm.git/
 
 Run the `setup.sh` to ensure that the pre-requisite libraries are installed in the environment.
 ```bash
-sudo chmod +x
+sudo chmod +x setup.sh
 ./setup.sh
 ```
 

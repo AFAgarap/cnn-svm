@@ -9,7 +9,7 @@ An Architecture Combining Convolutional Neural Network (CNN) and Linear Support 
 *This project was inspired by Y. Tang's [Deep Learning using Linear Support Vector Machines](https://arxiv.org/abs/1306.0239)
 (2013).*
 
-The full paper on this project may be read at [arXiv.org](https://arxiv.org/abs/1712.03541), [ResearchGate](https://www.researchgate.net/publication/321745073_An_Architecture_Combining_Convolutional_Neural_Network_CNN_and_Support_Vector_Machine_SVM_for_Image_Classification), and [Academia.edu](https://www.academia.edu/35401788/An_Architecture_Combining_Convolutional_Neural_Network_CNN_and_Support_Vector_Machine_SVM_for_Image_Classification).
+The full paper on this project may be read at [arXiv.org](https://arxiv.org/abs/1712.03541), [ResearchGate](https://www.researchgate.net/publication/321745073_An_Architecture_Combining_Convolutional_Neural_Network_CNN_and_Support_Vector_Machine_SVM_for_Image_Classification).
 
 ## Abstract 
 

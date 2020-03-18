@@ -20,4 +20,13 @@ class CNN(tf.keras.Model):
         self.dropout_layer = tf.keras.layers.Dropout(rate=5e-1)
         self.output_layer = tf.keras.layers.Dense(units=kwargs["num_classes"])
 
+    def call(self, features):
+        activations = {}
+        for index, layer in enumerate(self.layers):
+            if index == 0:
+                activations[index] = layer(features)
+            else:
+                activations[index] = layer(activations[index - 1])
+        logits = activations[len(activations) - 1]
+        return logits
 

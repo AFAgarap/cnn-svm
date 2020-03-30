@@ -12,7 +12,9 @@ __author__ = "Abien Fred Agarap"
 __version__ = "1.0.0"
 
 
-def load_tfds(name: str = "mnist") -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+def load_tfds(
+    name: str = "mnist"
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
     Returns a data set from `tfds`.
 

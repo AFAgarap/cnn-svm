@@ -115,7 +115,7 @@ To cite the repository/software, kindly use the following BibTex entry:
 
 ## License
 ```
-Copyright 2017 Abien Fred Agarap
+Copyright 2017-2020 Abien Fred Agarap
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

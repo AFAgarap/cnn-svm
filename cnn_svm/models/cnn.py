@@ -54,3 +54,16 @@ class CNN(tf.keras.Model):
                 activations[index] = layer(activations[index - 1])
         logits = activations[len(activations) - 1]
         return logits
+
+
+def epoch_train(model, data_loader):
+    epoch_loss = 0
+    for batch_features, batch_labels in data_loader:
+        with tf.GradientTape() as tape:
+            outputs = model(batch_features)
+            train_loss = model.loss_fn(outputs, batch_labels)
+        gradients = tape.gradient(train_loss, model.trainable_variables)
+        model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+        epoch_loss += train_loss
+    epoch_loss /= len(data_loader)
+    return epoch_loss

@@ -56,7 +56,6 @@ def load_tfds(
     train_labels = train_dataset["label"]
 
     train_features = train_features.astype("float32")
-    train_features = train_features.reshape(-1, np.prod(train_features.shape[1:]))
     train_features = train_features / 255.0
 
     test_dataset = tfds.load(name=name, split=tfds.Split.TEST, batch_size=-1)
@@ -66,7 +65,6 @@ def load_tfds(
     test_labels = test_dataset["label"]
 
     test_features = test_features.astype("float32")
-    test_features = test_features.reshape(-1, np.prod(test_features.shape[1:]))
     test_features = test_features / 255.0
 
     return train_features, test_features, train_labels, test_labels

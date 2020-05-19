@@ -44,6 +44,8 @@ class CNN(tf.keras.Model):
         )
         self.dropout_layer = tf.keras.layers.Dropout(rate=5e-1)
         self.output_layer = tf.keras.layers.Dense(units=kwargs["num_classes"])
+        self.optimizer = tf.optimizers.Adam(learning_rate=1e-3)
+        self.loss_fn = tf.losses.SparseCategoricalCrossentropy(from_logits=True)
 
     def call(self, features):
         activations = {}

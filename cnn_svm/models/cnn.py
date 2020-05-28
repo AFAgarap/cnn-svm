@@ -60,19 +60,19 @@ class CNN(tf.keras.Model):
     def fit(self, data_loader, epochs):
         train_loss = []
         for epoch in range(epochs):
-            epoch_loss = epoch_train(self, data_loader)
+            epoch_loss = self.epoch_train(self, data_loader)
             train_loss.append(epoch_loss)
             print(f"epoch {epoch + 1}/{epochs} : mean loss = {train_loss[-1]:.6f}")
 
-
-def epoch_train(model, data_loader):
-    epoch_loss = 0
-    for batch_features, batch_labels in data_loader:
-        with tf.GradientTape() as tape:
-            outputs = model(batch_features)
-            train_loss = model.loss_fn(batch_labels, outputs)
-        gradients = tape.gradient(train_loss, model.trainable_variables)
-        model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
-        epoch_loss += train_loss
-    epoch_loss = tf.reduce_mean(epoch_loss)
-    return epoch_loss
+    @staticmethod
+    def epoch_train(model, data_loader):
+        epoch_loss = 0
+        for batch_features, batch_labels in data_loader:
+            with tf.GradientTape() as tape:
+                outputs = model(batch_features)
+                train_loss = model.loss_fn(batch_labels, outputs)
+            gradients = tape.gradient(train_loss, model.trainable_variables)
+            model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+            epoch_loss += train_loss
+        epoch_loss = tf.reduce_mean(epoch_loss)
+        return epoch_loss

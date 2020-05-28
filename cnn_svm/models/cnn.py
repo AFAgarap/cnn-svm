@@ -1,18 +1,16 @@
-# Convolutional Neural Network with Support Vector Machine
-# Copyright (C) 2017-2020  Abien Fred Agarap
+# Copyright 2017-2020 Abien Fred Agarap
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published
-# by the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """Implementation of convolutional neural network"""
 from __future__ import absolute_import
 from __future__ import division
@@ -62,19 +60,19 @@ class CNN(tf.keras.Model):
     def fit(self, data_loader, epochs):
         train_loss = []
         for epoch in range(epochs):
-            epoch_loss = epoch_train(self, data_loader)
+            epoch_loss = self.epoch_train(self, data_loader)
             train_loss.append(epoch_loss)
             print(f"epoch {epoch + 1}/{epochs} : mean loss = {train_loss[-1]:.6f}")
 
-
-def epoch_train(model, data_loader):
-    epoch_loss = 0
-    for batch_features, batch_labels in data_loader:
-        with tf.GradientTape() as tape:
-            outputs = model(batch_features)
-            train_loss = model.loss_fn(batch_labels, outputs)
-        gradients = tape.gradient(train_loss, model.trainable_variables)
-        model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
-        epoch_loss += train_loss
-    epoch_loss = tf.reduce_mean(epoch_loss)
-    return epoch_loss
+    @staticmethod
+    def epoch_train(model, data_loader):
+        epoch_loss = 0
+        for batch_features, batch_labels in data_loader:
+            with tf.GradientTape() as tape:
+                outputs = model(batch_features)
+                train_loss = model.loss_fn(batch_labels, outputs)
+            gradients = tape.gradient(train_loss, model.trainable_variables)
+            model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+            epoch_loss += train_loss
+        epoch_loss = tf.reduce_mean(epoch_loss)
+        return epoch_loss

@@ -16,6 +16,11 @@ import torch
 
 
 class CNN(torch.nn.Module):
+    """
+    A convolutional neural network that optimizes
+    softmax cross entropy using Adam optimizer.
+    """
+
     def __init__(
         self,
         input_dim: int = 1,

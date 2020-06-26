@@ -52,3 +52,26 @@ class CNN(torch.nn.Module):
         self.optimizer = torch.optim.Adam(params=self.parameters(), lr=learning_rate)
         self.criterion = torch.nn.CrossEntropyLoss().to(self.model_device)
         self.train_loss = []
+
+    def forward(self, features):
+        """
+        Defines the forward pass by the model.
+
+        Parameter
+        ---------
+        features : torch.Tensor
+            The input features.
+
+        Returns
+        -------
+        logits : torch.Tensor
+            The model output.
+        """
+        activations = {}
+        for index, layer in enumerate(self.layers):
+            if index == 0:
+                activations[index] = layer(features)
+            else:
+                activations[index] = layer(activations[index - 1])
+        logits = activations[len(activations) - 1]
+        return logits

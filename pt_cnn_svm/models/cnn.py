@@ -97,3 +97,35 @@ class CNN(torch.nn.Module):
         outputs = self.forward(features)
         predictions, classes = torch.max(outputs.data, dim=1)
         return (predictions, classes) if return_likelihoods else classes
+
+    @staticmethod
+    def epoch_train(model, data_loader):
+        """
+        Trains a model for one epoch.
+
+        Parameters
+        ----------
+        model : torch.nn.Module
+            The model to train.
+        data_loader : torch.utils.dataloader.DataLoader
+            The data loader object that consists of the data pipeline.
+
+        Returns
+        -------
+        epoch_loss : float
+            The epoch loss.
+        """
+        epoch_loss = 0
+        for batch_features, batch_labels in data_loader:
+            batch_features = batch_features.to(model.model_device)
+            batch_labels = batch_labels.to(model.model_device)
+            model.optimizer.zero_grad()
+            outputs = model(batch_features)
+            train_loss = model.criterion(outputs, batch_labels)
+            train_loss.backward()
+            model.optimizer.step()
+            epoch_loss += train_loss.item()
+
+        epoch_loss /= len(data_loader)
+
+        return epoch_loss

@@ -9,6 +9,20 @@ class CNN(torch.nn.Module):
         model_device: torch.device = torch.device("cpu"),
         learning_rate: float = 1e-4,
     ):
+        """
+        Constructs a convolutional neural network classifier.
+
+        Parameters
+        ----------
+        input_dim: int
+            The dimensionality of the input feature channel.
+        num_classes: int
+            The number of classes in the dataset.
+        model_device: torch.device
+            The device to use for model computations.
+        learning_rate: float
+            The learning rate to use for optimization.
+        """
         super().__init__()
         self.layers = torch.nn.ModuleList(
             [

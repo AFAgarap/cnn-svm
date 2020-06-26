@@ -48,3 +48,7 @@ class CNN(torch.nn.Module):
                 torch.nn.Linear(in_features=512, out_features=num_classes),
             ]
         )
+        self.model_device = model_device
+        self.optimizer = torch.optim.Adam(params=self.parameters(), lr=learning_rate)
+        self.criterion = torch.nn.CrossEntropyLoss().to(self.model_device)
+        self.train_loss = []

@@ -98,6 +98,25 @@ class CNN(torch.nn.Module):
         predictions, classes = torch.max(outputs.data, dim=1)
         return (predictions, classes) if return_likelihoods else classes
 
+    def fit(self, data_loader, epochs):
+        """
+        Trains the cnn model.
+
+        Parameters
+        ----------
+        data_loader : torch.utils.dataloader.DataLoader
+            The data loader object that consists of the data pipeline.
+        epochs : int
+            The number of epochs to train the model.
+        """
+        self.to(self.model_device)
+        for epoch in range(epochs):
+            epoch_loss = self.epoch_train(self, data_loader)
+            if "cuda" in self.model_device.type:
+                torch.cuda.empty_cache()
+            self.train_loss.append(epoch_loss)
+            print(f"epoch {epoch + 1}/{epochs} : mean loss = {self.train_loss[-1]:.6f}")
+
     @staticmethod
     def epoch_train(model, data_loader):
         """
